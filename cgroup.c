@@ -129,6 +129,27 @@ static int write_int_to_file(struct thread_data *td, const char *path,
 
 }
 
+static int write_str_to_file(struct thread_data *td, const char *path,
+			     const char *filename, const char *val,
+			     const char *onerr)
+{
+	char tmp[256];
+	FILE *f;
+
+	sprintf(tmp, "%s/%s", path, filename);
+	f = fopen(tmp, "w");
+	if (!f) {
+		td_verror(td, errno, onerr);
+		return 1;
+	}
+
+	fprintf(f, "%s", val);
+	fclose(f);
+	return 0;
+
+}
+
+
 static int cgroup_write_pid(struct thread_data *td, const char *root)
 {
 	unsigned int val = td->pid;
@@ -175,6 +196,38 @@ int cgroup_setup(struct thread_data *td, struct flist_head *clist, char **mnt)
 					"cgroup open weight"))
 			goto err;
 	}
+
+    if (td->o.cgroup_read_iops) {
+        if (write_str_to_file(td, root, "blkio.throttle.read_iops_device",
+                    td->o.cgroup_read_iops,
+                    "cgroup open read_iops"))
+            goto err;
+
+    }
+    
+    if (td->o.cgroup_write_iops) {
+        if (write_str_to_file(td, root, "blkio.throttle.write_iops_device",
+                    td->o.cgroup_write_iops,
+                    "cgroup open write_iops"))
+            goto err;
+
+    }
+    
+    if (td->o.cgroup_read_bps) {
+        if (write_str_to_file(td, root, "blkio.throttle.read_bps_device",
+                    td->o.cgroup_read_bps,
+                    "cgroup open read_bps"))
+            goto err;
+
+    }
+    
+    if (td->o.cgroup_write_bps) {
+        if (write_str_to_file(td, root, "blkio.throttle.write_bps_device",
+                    td->o.cgroup_write_bps,
+                    "cgroup open write_bps"))
+            goto err;
+
+    }
 
 	if (!cgroup_write_pid(td, root)) {
 		free(root);

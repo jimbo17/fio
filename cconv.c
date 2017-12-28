@@ -46,6 +46,10 @@ static void free_thread_options_to_cpu(struct thread_options *o)
 	free(o->ioscheduler);
 	free(o->profile);
 	free(o->cgroup);
+    free(o->cgroup_read_iops);
+    free(o->cgroup_read_bps);
+    free(o->cgroup_write_iops);
+    free(o->cgroup_write_bps);
 
 	for (i = 0; i < DDIR_RWDIR_CNT; i++) {
 		free(o->bssplit[i]);
@@ -82,6 +86,10 @@ void convert_thread_options_to_cpu(struct thread_options *o,
 	string_to_cpu(&o->ioscheduler, top->ioscheduler);
 	string_to_cpu(&o->profile, top->profile);
 	string_to_cpu(&o->cgroup, top->cgroup);
+	string_to_cpu(&o->cgroup_read_iops, top->cgroup_read_iops);
+	string_to_cpu(&o->cgroup_write_iops, top->cgroup_write_iops);
+	string_to_cpu(&o->cgroup_read_bps, top->cgroup_read_bps);
+	string_to_cpu(&o->cgroup_write_bps, top->cgroup_write_bps);
 
 	o->allow_create = le32_to_cpu(top->allow_create);
 	o->allow_mounted_write = le32_to_cpu(top->allow_mounted_write);
@@ -338,6 +346,10 @@ void convert_thread_options_to_net(struct thread_options_pack *top,
 	string_to_net(top->ioscheduler, o->ioscheduler);
 	string_to_net(top->profile, o->profile);
 	string_to_net(top->cgroup, o->cgroup);
+	string_to_net(top->cgroup_read_iops, o->cgroup_read_iops);
+	string_to_net(top->cgroup_write_iops, o->cgroup_write_iops);
+	string_to_net(top->cgroup_read_bps, o->cgroup_read_bps);
+	string_to_net(top->cgroup_write_bps, o->cgroup_write_bps);
 
 	top->allow_create = cpu_to_le32(o->allow_create);
 	top->allow_mounted_write = cpu_to_le32(o->allow_mounted_write);

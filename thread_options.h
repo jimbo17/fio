@@ -293,6 +293,10 @@ struct thread_options {
 	char *cgroup;
 	unsigned int cgroup_weight;
 	unsigned int cgroup_nodelete;
+    char *cgroup_read_iops;
+    char *cgroup_write_iops;
+    char *cgroup_read_bps;
+    char *cgroup_write_bps;
 
 	unsigned int uid;
 	unsigned int gid;
@@ -569,6 +573,10 @@ struct thread_options_pack {
 	uint8_t cgroup[FIO_TOP_STR_MAX];
 	uint32_t cgroup_weight;
 	uint32_t cgroup_nodelete;
+	uint8_t cgroup_read_iops[FIO_TOP_STR_MAX];
+	uint8_t cgroup_write_iops[FIO_TOP_STR_MAX];
+	uint8_t cgroup_read_bps[FIO_TOP_STR_MAX];
+	uint8_t cgroup_write_bps[FIO_TOP_STR_MAX];
 
 	uint32_t uid;
 	uint32_t gid;
